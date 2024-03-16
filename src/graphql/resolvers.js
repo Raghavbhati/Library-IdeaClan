@@ -1,25 +1,16 @@
-const {RegisterUser, LoginUser, DeleteUser, updateUser}= require("../controllers/user.controller")
-const {addNewBook,updateBook,deleteBook} = require("../controllers/book.controller");
+const {RegisterUser, LoginUser, DeleteUser, updateUser, getUserProfile, getAllUser}= require("../controllers/user.controller")
+const {addNewBook,updateBook,deleteBook, getBooks, getSingleBook, searchBook} = require("../controllers/book.controller");
 const authorization = require("../middleware/authorization.middleware");
 
 
 const resolvers = {
     Query: {
-        users: async () => {
-            return await UserModel.find();
-        },
-        user: async (_, { id }) => {
-            return await UserModel.findById(id);
-        },
-        books: async () => {
-            return await BookModel.find();
-        },
-        book: async (_, { id }) => {
-            return await BookModel.findById(id);
-        },
-        searchBooks: async (_, { name }) => {
-            return await BookModel.find({ title: new RegExp(name, 'i') });
-        },
+        users: async () => { return await getAllUser()},
+        user: async (_, { id }) => {return await getUserProfile(id)},
+
+        books: async () => {return await getBooks(); },
+        book: async (_, { id }) => {return await getSingleBook(id);},
+        searchBooks: async (_, { title }) => {return await searchBook(title)},
     },
     Mutation: {
         addUser: async (_, { email, password, role }) => { return await RegisterUser({ email, password, role })},

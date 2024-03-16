@@ -55,4 +55,44 @@ const deleteBook = async (id)=>{
     }
 }
 
-module.exports = {addNewBook,updateBook,deleteBook}
+const getSingleBook = async (id) => {
+    if (!id) {
+      throw new Error("id not found");
+    }
+    try {
+      const book = await BookModel.findById(id).populate("owner");
+      if (!book) {
+        throw new Error("Book not found");
+      }
+  
+      return book;
+    } catch (error) {
+      throw error;
+    }
+};
+  
+const getBooks = async () => {
+    try {
+      const Books = await BookModel.find().populate("owner");
+      if (!Books) {
+        throw new Error("Unable to access Books right now");
+      }
+  
+      return Books;
+    } catch (error) {
+      throw error;
+    }
+};
+
+const searchBook = async (title) => {
+    try {
+        const books = await BookModel.find({ "title": new RegExp(title, 'i') });
+        if (!books) {
+            throw new Error("No books found with the given title");
+        }
+        return books;
+    } catch (error) {
+        throw error;
+    }
+}
+module.exports = {addNewBook,updateBook,deleteBook, getBooks, getSingleBook,searchBook}

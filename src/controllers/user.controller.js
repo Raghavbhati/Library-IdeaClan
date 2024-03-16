@@ -1,5 +1,6 @@
 const { UserModel } = require("../models/user.model");
 
+
 const generateToken = async (userId) => {
   try {
     const user = await UserModel.findById(userId);
@@ -120,4 +121,34 @@ const DeleteUser = async (context) => {
   }
 };
 
-module.exports = {RegisterUser, LoginUser, DeleteUser, updateUser}
+const getUserProfile = async (id) => {
+  if (!id) {
+    throw new Error("id not found");
+  }
+  try {
+    const user = await UserModel.findById(id).populate("purchasedBooks").populate("borrowedBooks");
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getAllUser = async () => {
+  try {
+    const users = await UserModel.find().populate("purchasedBooks").populate("borrowedBooks");
+    if (!users) {
+      throw new Error("Unable to access users right now");
+    }
+
+    return users;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+module.exports = {RegisterUser, LoginUser, DeleteUser, updateUser, getUserProfile, getAllUser}
