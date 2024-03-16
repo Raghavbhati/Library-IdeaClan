@@ -1,5 +1,5 @@
 const {RegisterUser, LoginUser, DeleteUser, updateUser, getUserProfile, getAllUser}= require("../controllers/user.controller")
-const {addNewBook,updateBook,deleteBook, getBooks, getSingleBook, searchBook} = require("../controllers/book.controller");
+const {addNewBook,updateBook,deleteBook, getBooks, getSingleBook, searchBook, borrowBook, buyBook} = require("../controllers/book.controller");
 const authorization = require("../middleware/authorization.middleware");
 
 
@@ -34,6 +34,9 @@ const resolvers = {
                 return await deleteBook(id)
             }
         },
+
+        borrowBook: async (_, {bookId}, context) =>{ return await borrowBook(bookId, context)},
+        buyBook: async (_, {bookId}, context) => {return await buyBook(bookId, context)},
     },
 };
 

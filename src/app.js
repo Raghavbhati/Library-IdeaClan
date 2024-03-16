@@ -1,12 +1,19 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const rateLimit = require("express-rate-limit")
 
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 500
+}); 
 const app = express();
 
 app.use(cors());
 app.use(express.json()); 
-app.use(cookieParser());
+app.use(cookieParser());   
+app.use(limiter);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 

@@ -37,6 +37,9 @@ const typeDefs = gql`
     addBook(title: String!, author: String!, publishedYear: String!): Book
     updateBook(id: ID!, title: String, author: String, publishedYear: String, isAvailable: Boolean, owner: ID): Book
     deleteBook(id: ID!): Book
+
+    borrowBook(bookId: ID!) : Book
+    buyBook(bookId: ID!) : Book
   }
 `;
 

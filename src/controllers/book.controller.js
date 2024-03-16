@@ -1,4 +1,5 @@
 const { BookModel } = require("../models/book.model");
+const { UserModel } = require("../models/user.model");
 
 
 const addNewBook = async (bookData)=>{
@@ -95,4 +96,65 @@ const searchBook = async (title) => {
         throw error;
     }
 }
-module.exports = {addNewBook,updateBook,deleteBook, getBooks, getSingleBook,searchBook}
+
+const borrowBook = async(bookId, context)=>{
+    try {
+        if(!context.user){
+            throw new Error('You must be logged in to do this');
+        }
+
+        const book = await BookModel.findById(bookId);
+        if (!book.isAvailable) {
+            throw new Error('Book is not available for borrowing');
+        }
+        
+        const user = await UserModel.findById(context.user._id);
+        if(!user){
+            throw new Error("User not found, please login again");
+        }
+
+        user.borrowedBooks.push(book);
+        book.isAvailable = false;
+        book.owner = context.user._id;
+
+        await user.save();
+        await book.save();
+
+        const updatedbook = await BookModel.findById(bookId).populate('owner');
+        return updatedbook;
+    } catch (error) {
+        throw error
+    }
+}
+
+const buyBook = async (bookId, context)=>{
+    try {
+        if(!context.user){
+            throw new Error('You must be logged in to do this');
+        }
+        const book = await BookModel.findById(bookId);
+        if (!book.isAvailable) {
+            throw new Error('Book is not available for purchase');
+        
+        }
+
+        const user = await UserModel.findById(context.user._id);
+        if(!user){
+            throw new Error("User not found, please login again");
+        }
+
+        user.purchasedBooks.push(book);
+        book.isAvailable = false;
+        book.owner = context.user._id;
+
+        await user.save();
+        await book.save();
+
+        const updatedbook = await BookModel.findById(bookId).populate('owner');
+        return updatedbook;
+    } catch (error) {
+        throw error
+    }
+}
+ 
+module.exports = {addNewBook,updateBook,deleteBook, getBooks, getSingleBook,searchBook, borrowBook, buyBook}
