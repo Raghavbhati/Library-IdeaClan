@@ -16,7 +16,7 @@ const typeDefs = gql`
     title: String!
     author: String!
     publishedYear: String!
-    isAvailable: Boolean!
+    isAvailable: Boolean
     owner: User
   }
 
@@ -34,7 +34,7 @@ const typeDefs = gql`
     updateUser( email: String, password: String): User
     deleteUser: User
 
-    addBook(title: String!, author: String!, publishedYear: String!, isAvailable: Boolean!, owner: ID): Book
+    addBook(title: String!, author: String!, publishedYear: String!): Book
     updateBook(id: ID!, title: String, author: String, publishedYear: String, isAvailable: Boolean, owner: ID): Book
     deleteBook(id: ID!): Book
   }

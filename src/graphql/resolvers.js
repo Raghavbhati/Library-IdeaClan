@@ -1,4 +1,7 @@
 const {RegisterUser, LoginUser, DeleteUser, updateUser}= require("../controllers/user.controller")
+const {addNewBook,updateBook,deleteBook} = require("../controllers/book.controller");
+const authorization = require("../middleware/authorization.middleware");
+
 
 const resolvers = {
     Query: {
@@ -25,22 +28,20 @@ const resolvers = {
         deleteUser: async (_, {}, context) => {return await DeleteUser(context)},
 
 
-        addBook: async (_, { title, author, publishedYear, isAvailable, owner }) => {
-            const book = new BookModel({ title, author, publishedYear, isAvailable, owner });
-            await book.save();
-            return book;
+        addBook: async (_, { title, author, publishedYear}, context) => {
+            if(!authorization(context, "Admin")){
+                return await addNewBook({ title, author, publishedYear})
+            }
         },
-        updateBook: async (_, { id, title, author, publishedYear, isAvailable, owner }) => {
-            const updates = {};
-            if (title) updates.title = title;
-            if (author) updates.author = author;
-            if (publishedYear) updates.publishedYear = publishedYear;
-            if (isAvailable !== undefined) updates.isAvailable = isAvailable;
-            if (owner) updates.owner = owner;
-            return await BookModel.findByIdAndUpdate(id, updates, { new: true });
+        updateBook: async (_, { id, title, author, publishedYear}, context) => {
+            if(!authorization(context, "Admin")){
+                return await updateBook({id, title, author, publishedYear})
+            }
         },
-        deleteBook: async (_, { id }) => {
-            return await BookModel.findByIdAndDelete(id);
+        deleteBook: async (_, { id }, context) => {
+            if(!authorization(context, "Admin")){
+                return await deleteBook(id)
+            }
         },
     },
 };

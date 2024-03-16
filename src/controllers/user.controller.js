@@ -72,7 +72,7 @@ const LoginUser = async (LoginData, context) => {
     } catch (error) {
       throw error;
     }
-  };
+};
   
 const updateUser = async (data, context)=>{
     const {email, password} = data;
