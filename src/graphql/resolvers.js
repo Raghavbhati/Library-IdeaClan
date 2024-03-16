@@ -25,7 +25,7 @@ const resolvers = {
             }
         },
         updateBook: async (_, { id, title, author, publishedYear}, context) => {
-            if(!authorization(context, "Admin")){
+            if(!authorization(context, "Admin")){   
                 return await updateBook({id, title, author, publishedYear})
             }
         },
