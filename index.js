@@ -23,6 +23,7 @@ const server = new ApolloServer({
 
     return { req, res };
   },
+  playground: true,
 })
 
 ConnectToDB()
